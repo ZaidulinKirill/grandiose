@@ -12,7 +12,21 @@
       ],
       "include_dirs": [ "include" ],
       'conditions': [
-        ['OS=="win"', {
+        ['OS=="win" and target_arch == "ia32"', {
+          "link_settings": {
+            "libraries": [ "Processing.NDI.Lib.x86.lib" ],
+            "library_dirs": [ "lib/win_x86" ]
+          },
+          "copies": [
+            {
+              "destination": "build/Release",
+              "files": [
+                "lib/win_x86/Processing.NDI.Lib.x86.dll"
+              ]
+            }
+          ]},
+        ],
+        ['OS=="win" and target_arch == "x64"', {
           "link_settings": {
             "libraries": [ "Processing.NDI.Lib.x64.lib" ],
             "library_dirs": [ "lib/win_x64" ]
