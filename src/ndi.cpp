@@ -21,7 +21,7 @@ class FindSourcesWorker : public AsyncWorker {
       find_create.show_local_sources = true;
       find_create.p_groups = NULL;
       if (extraIPs != NULL) {
-        find_create.p_groups = extraIPs;
+        find_create.p_extra_ips = extraIPs;
       }
 
       NDIlib_find_instance_t pFind = NDIlib_find_create_v2(&find_create);
