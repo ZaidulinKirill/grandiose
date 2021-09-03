@@ -9,10 +9,9 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "node-addon-api": "^4.1.0"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "bindings": "^1.5.0"
+    "bindings": "^1.5.0",
+    "node-addon-api": "^4.1.0"
   }
 }
