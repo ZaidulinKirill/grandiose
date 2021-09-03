@@ -1,40 +1,18 @@
 {
   "name": "grandiose",
-  "version": "0.0.9",
-  "private": true,
-  "description": "Node.JS native bindings to the Newtek NDI SDK.",
+  "version": "0.0.5",
+  "description": "",
   "main": "index.js",
-  "scripts": {
-    "install": "node-pre-gyp install --fallback-to-build",
-    "rebuild": "node-pre-gyp install --build-from-source",
-    "run-scratch-with-gc": "node --expose-gc scratch/receive-data.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jensstigaard/grandiose.git"
-  },
-  "keywords": [
-    "Newtek",
-    "NDI",
-    "network",
-    "device",
-    "interface"
-  ],
-  "author": "Streampunk Media <furnace@streampunk.media> (http://www.streampunk.media)",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/Streampunk/grandiose/issues"
-  },
-  "homepage": "https://github.com/Streampunk/grandiose#readme",
   "gypfile": true,
-  "dependencies": {
-    "node-pre-gyp": "0.15.0"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "binary": {
-    "module_name": "grandiose",
-    "module_path": "./build/{configuration}/",
-    "remote_path": "{version}",
-    "package_name": "{platform}-{arch}.tar.gz",
-    "host": "https://github.com/jensstigaard/grandiose/releases/download/"
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "node-addon-api": "^4.1.0"
+  },
+  "dependencies": {
+    "bindings": "^1.5.0"
   }
 }
