@@ -77,6 +77,7 @@ Napi::Promise FindMethod(const Napi::CallbackInfo& info) {
   const char * extraIPs = info.Length() == 3 ? info[2].As<Napi::String>().Utf8Value().c_str() : NULL;
 
   FindSourcesWorker* worker = new FindSourcesWorker(env, deferred, waitTime, iterations, extraIPs);
+  worker->Queue();
   return deferred.Promise();
 }
 
