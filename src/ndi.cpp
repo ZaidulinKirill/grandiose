@@ -3,12 +3,14 @@
 #include <Processing.NDI.Find.h>
 #include <list>
 
-Napi::Array FindMethod(const Napi::CallbackInfo& info) {
+Napi::Promise FindMethod(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
+  auto deferred = Napi::Promise::Deferred::New(env);
+
   if (info.Length() < 2) {
-    Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
-    return Napi::Array::New(env);
+    deferred.Reject(Napi::TypeError::New(env, "Wrong number of arguments").Value());
+    return deferred.Promise();
   }
 
   double waitTime = info[0].As<Napi::Number>().DoubleValue();
@@ -31,7 +33,6 @@ Napi::Array FindMethod(const Napi::CallbackInfo& info) {
       if (NDIlib_find_wait_for_sources(pFind, waitTime)) {
         uint32_t no_sources = 0;
         const NDIlib_source_t* p_sources = NDIlib_find_get_current_sources(pFind, &no_sources);
-        printf("Network sources (%u found).\n", no_sources);
         for (uint32_t i = 0; i < no_sources; i++) {
           sources.push_front(p_sources[i]);
         }
@@ -50,10 +51,12 @@ Napi::Array FindMethod(const Napi::CallbackInfo& info) {
       i++;
     }
 
-    return resultArray;
+    deferred.Resolve(resultArray);
+    return deferred.Promise();
   }
 
-  return Napi::Array::New(env);
+  deferred.Reject(Napi::TypeError::New(env, "Unknown error occured").Value());
+  return deferred.Promise();
 }
 
 Napi::Object InitFind(Napi::Env env, Napi::Object exports) {
