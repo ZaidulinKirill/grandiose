@@ -7,14 +7,12 @@ using namespace Napi;
 
 class FindSourcesWorker : public AsyncWorker {
     public:
-        FindSourcesWorker(Napi::Promise::Deferred& deferred, double waitTime, double iterations, const char * extraIPs)
-        : AsyncWorker(Env()), deferred(deferred), waitTime(waitTime), iterations(iterations), extraIPs(extraIPs) {}
+        FindSourcesWorker(Napi::Env env, Napi::Promise::Deferred& deferred, double waitTime, double iterations, const char * extraIPs)
+        : AsyncWorker(env), env(env), deferred(deferred), waitTime(waitTime), iterations(iterations), extraIPs(extraIPs) {}
 
         ~FindSourcesWorker() {}
 
     void Execute() override {
-      Napi::Env env = Env();
-
       NDIlib_find_create_t find_create;
       find_create.show_local_sources = true;
       find_create.p_groups = NULL;
@@ -62,6 +60,7 @@ class FindSourcesWorker : public AsyncWorker {
 
     private:
         Napi::Promise::Deferred deferred;
+        Napi::Env env;
         double waitTime; 
         double iterations; 
         const char * extraIPs;
@@ -81,7 +80,7 @@ Napi::Promise FindMethod(const Napi::CallbackInfo& info) {
   double iterations = info[1].As<Napi::Number>().DoubleValue();
   const char * extraIPs = info.Length() == 3 ? info[2].As<Napi::String>().Utf8Value().c_str() : NULL;
 
-  FindSourcesWorker* worker = new FindSourcesWorker(deferred, waitTime, iterations, extraIPs);
+  FindSourcesWorker* worker = new FindSourcesWorker(env, deferred, waitTime, iterations, extraIPs);
   worker->Queue();
   return deferred.Promise();
 }
