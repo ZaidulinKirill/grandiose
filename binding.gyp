@@ -1,15 +1,16 @@
 {
   "targets": [
     {
-      "target_name": "ndi",
-      "cflags!": [ "-fno-exceptions" ],
-      "cflags_cc!": [ "-fno-exceptions" ],
-      "sources": [ "src/ndi.cpp" ],
-      "include_dirs": [
-        "include",
-        "<!@(node -p \"require('node-addon-api').include\")"
+      "target_name": "grandiose",
+      "sources": [
+        "src/grandiose_util.cc",
+        "src/grandiose_find.cc",
+        "src/grandiose_send.cc",
+        "src/grandiose_send_video.cc",
+        "src/grandiose_receive.cc",
+        "src/grandiose.cc"
       ],
-      'defines': [ 'NAPI_DISABLE_CPP_EXCEPTIONS' ],
+      "include_dirs": [ "include" ],
       'conditions': [
         ['OS=="win" and target_arch == "ia32"', {
           "link_settings": {
@@ -38,7 +39,49 @@
               ]
             }
           ]},
-        ]
+        ],
+        ['OS=="mac"', {
+          'conditions': [
+            ['target_arch=="x64"', {
+              'xcode_settings': {
+                'OTHER_CPLUSPLUSFLAGS': [
+                  '-std=c++11',
+                  '-stdlib=libc++',
+                  '-fexceptions'
+                ],
+                'OTHER_LDFLAGS': [
+                  "-Wl,-rpath,<@(module_root_dir)/build/Release"
+                ]
+              },
+              "link_settings": {
+                "libraries": [
+                  "<(module_root_dir)/build/Release/libndi.4.dylib"
+                ],
+                "copies": [
+                  {
+                    "destination": "build/Release/",
+                    "files": [
+                      "<!@(ls -1 lib/mac_x64/libndi.4.dylib)"
+                    ]
+                  }
+                ]
+              },
+            }]
+          ],
+          # "copies": [{
+          #   "destination": "build/Release",
+          #   "files": [
+          #     "lib/mac_x64/libndi.4.dylib"
+          #   ]
+          # }]
+        }],
+        ['OS=="linux"', {
+          'conditions': [
+            ['target_arch=="x86" or target_arch=="x64"', {
+              "libraries": ['-L/lib/x86_64-linux-gnu', '-lndi']
+            }]
+          ]
+        }]
       ]
     }
   ]
